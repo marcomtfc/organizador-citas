@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Citas - Semana 16-20 Septiembre 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-section input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-section button {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .input-section button:hover {
+            background: #764ba2;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        thead {
+            background: #f5f5f5;
+            border-bottom: 3px solid #667eea;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .slot-cell {
+            position: relative;
+        }
+
+        .buttons-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-option {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-option:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .btn-option.si {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .btn-option.si.active {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-option.no {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .btn-option.no.active {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-option.quiza {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .btn-option.quiza.active {
+            background: #ff9800;
+            color: white;
+        }
+
+        .person-name {
+            font-weight: 600;
+            color: #333;
+            min-width: 120px;
+        }
+
+        .time-slot {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 100px;
+        }
+
+        .summary {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-slot {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .summary-counts {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+        }
+
+        .count-si {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .count-no {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .count-quiza {
+            color: #ff9800;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-export {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #45a049;
+        }
+
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .no-data p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .delete-person {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .delete-person:hover {
+            background: #da190b;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .input-section {
+                flex-direction: column;
+            }
+
+            .input-section input {
+                min-width: 100%;
+            }
+
+            .buttons-group {
+                flex-direction: column;
+            }
+
+            .btn-option {
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Organizador de Citas</h1>
+            <p>Semana del 16 al 20 de Septiembre de 2026</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <input 
+                    type="text" 
+                    id="nameInput" 
+                    placeholder="Ingresa tu nombre..." 
+                    onkeypress="if(event.key === 'Enter') addPerson()"
+                >
+                <button onclick="addPerson()">Agregar</button>
+            </div>
+
+            <div id="tableContainer"></div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4caf50;"></div>
+                    <span><strong>Puedo</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f44336;"></div>
+                    <span><strong>No puedo</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff9800;"></div>
+                    <span><strong>Podría</strong></span>
+                </div>
+            </div>
+
+            <div id="summaryContainer"></div>
+
+            <div class="actions">
+                <button class="btn-action btn-export" onclick="exportData()">📊 Descargar Resultados</button>
+                <button class="btn-action btn-clear" onclick="clearAll()">🗑️ Limpiar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const days = ['Lunes 16', 'Martes 17', 'Miércoles 18', 'Jueves 19', 'Viernes 20'];
+        const slots = ['09:00-11:00', '11:00-13:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-21:00'];
+        const options = [
+            { value: 'si', label: 'Puedo', class: 'si' },
+            { value: 'no', label: 'No puedo', class: 'no' },
+            { value: 'quiza', label: 'Podría', class: 'quiza' }
+        ];
+
+        let data = JSON.parse(localStorage.getItem('citasData')) || {};
+
+        function saveData() {
+            localStorage.setItem('citasData', JSON.stringify(data));
+            renderTable();
+            renderSummary();
+        }
+
+        function addPerson() {
+            const nameInput = document.getElementById('nameInput');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Por favor ingresa un nombre');
+                return;
+            }
+
+            if (data[name]) {
+                alert('Esta persona ya está en la lista');
+                return;
+            }
+
+            data[name] = {};
+            days.forEach(day => {
+                slots.forEach(slot => {
+                    data[name][`${day}-${slot}`] = null;
+                });
+            });
+
+            nameInput.value = '';
+            saveData();
+        }
+
+        function setOption(person, slot, option) {
+            if (!data[person]) return;
+            data[person][slot] = data[person][slot] === option ? null : option;
+            saveData();
+        }
+
+        function deletePerson(person) {
+            if (confirm(`¿Eliminar a ${person}?`)) {
+                delete data[person];
+                saveData();
+            }
+        }
+
+        function renderTable() {
+            const container = document.getElementById('tableContainer');
+
+            if (Object.keys(data).length === 0) {
+                container.innerHTML = '<div class="no-data"><p>Ingresa nombres de participantes para comenzar</p></div>';
+                return;
+            }
+
+            let html = '<div class="table-wrapper"><table><thead><tr><th>Participante</th>';
+
+            days.forEach(day => {
+                slots.forEach(slot => {
+                    html += `<th><div class="time-slot">${day}<br>${slot}</div></th>`;
+                });
+            });
+
+            html += '<th>Acción</th></tr></thead><tbody>';
+
+            Object.keys(data).sort().forEach(person => {
+                html += `<tr><td class="person-name">${person}</td>`;
+
+                days.forEach(day => {
+                    slots.forEach(slot => {
+                        const slotKey = `${day}-${slot}`;
+                        const value = data[person][slotKey];
+                        html += '<td class="slot-cell"><div class="buttons-group">';
+
+                        options.forEach(opt => {
+                            const isActive = value === opt.value ? 'active' : '';
+                            html += `<button 
+                                class="btn-option ${opt.class} ${isActive}" 
+                                onclick="setOption('${person}', '${slotKey}', '${opt.value}')"
+                                title="${opt.label}"
+                            >${opt.label.charAt(0)}</button>`;
+                        });
+
+                        html += '</div></td>';
+                    });
+                });
+
+                html += `<td><button class="delete-person" onclick="deletePerson('${person}')">Eliminar</button></td></tr>`;
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function renderSummary() {
+            const container = document.getElementById('summaryContainer');
+
+            if (Object.keys(data).length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '<div class="summary"><h3>📊 Resumen por Franja Horaria</h3>';
+
+            days.forEach(day => {
+                slots.forEach(slot => {
+                    const slotKey = `${day}-${slot}`;
+                    let countSi = 0, countNo = 0, countQuiza = 0;
+
+                    Object.keys(data).forEach(person => {
+                        const value = data[person][slotKey];
+                        if (value === 'si') countSi++;
+                        else if (value === 'no') countNo++;
+                        else if (value === 'quiza') countQuiza++;
+                    });
+
+                    html += `
+                        <div class="summary-item">
+                            <span><strong>${day}</strong> ${slot}</span>
+                            <div class="summary-counts">
+                                <span class="count-si">✓ ${countSi}</span>
+                                <span class="count-no">✗ ${countNo}</span>
+                                <span class="count-quiza">? ${countQuiza}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function exportData() {
+            let csv = 'Participante,';
+
+            days.forEach(day => {
+                slots.forEach(slot => {
+                    csv += `"${day} ${slot}",`;
+                });
+            });
+
+            csv = csv.slice(0, -1) + '\n';
+
+            Object.keys(data).sort().forEach(person => {
+                csv += `"${person}",`;
+
+                days.forEach(day => {
+                    slots.forEach(slot => {
+                        const slotKey = `${day}-${slot}`;
+                        const value = data[person][slotKey];
+                        let display = '';
+                        if (value === 'si') display = 'Puedo';
+                        else if (value === 'no') display = 'No puedo';
+                        else if (value === 'quiza') display = 'Podría';
+
+                        csv += `"${display}",`;
+                    });
+                });
+
+                csv = csv.slice(0, -1) + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'organizador_citas_septiembre_2026.csv';
+            link.click();
+        }
+
+        function clearAll() {
+            if (confirm('¿Eliminar todos los datos? Esta acción no se puede deshacer.')) {
+                data = {};
+                localStorage.clear();
+                renderTable();
+                renderSummary();
+            }
+        }
+
+        // Render inicial
+        renderTable();
+        renderSummary();
+    </script>
+</body>
+</html>
